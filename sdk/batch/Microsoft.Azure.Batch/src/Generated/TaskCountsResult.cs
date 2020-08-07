@@ -18,39 +18,33 @@ namespace Microsoft.Azure.Batch
     using System.Linq;
 
     /// <summary>
-    /// A pool in the Azure Batch service.
+    /// The Task and TaskSlot counts for a Job.
     /// </summary>
-    public partial class PoolNodeCounts : IPropertyMetadata
+    public partial class TaskCountsResult : IPropertyMetadata
     {
         #region Constructors
 
-        internal PoolNodeCounts(Models.PoolNodeCounts protocolObject)
+        internal TaskCountsResult(Models.TaskCountsResult protocolObject)
         {
-            this.Dedicated = UtilitiesInternal.CreateObjectWithNullCheck(protocolObject.Dedicated, o => new NodeCounts(o).Freeze());
-            this.PoolId = protocolObject.PoolId;
-            this.Spot = UtilitiesInternal.CreateObjectWithNullCheck(protocolObject.Spot, o => new NodeCounts(o).Freeze());
+            this.TaskCounts = UtilitiesInternal.CreateObjectWithNullCheck(protocolObject.TaskCounts, o => new TaskCounts(o).Freeze());
+            this.TaskSlotCounts = UtilitiesInternal.CreateObjectWithNullCheck(protocolObject.TaskSlotCounts, o => new TaskSlotCounts(o).Freeze());
         }
 
         #endregion Constructors
 
-        #region PoolNodeCounts
+        #region TaskCountsResult
 
         /// <summary>
-        /// Gets the number of dedicated nodes in each state.
+        /// Gets the number of Tasks per state.
         /// </summary>
-        public NodeCounts Dedicated { get; }
+        public TaskCounts TaskCounts { get; }
 
         /// <summary>
-        /// Gets the ID of the pool.
+        /// Gets the number of TaskSlots required by Tasks per state.
         /// </summary>
-        public string PoolId { get; }
+        public TaskSlotCounts TaskSlotCounts { get; }
 
-        /// <summary>
-        /// Gets the number of Spot nodes in each state.
-        /// </summary>
-        public NodeCounts Spot { get; }
-
-        #endregion // PoolNodeCounts
+        #endregion // TaskCountsResult
 
         #region IPropertyMetadata
 

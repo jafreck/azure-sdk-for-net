@@ -32,7 +32,7 @@
         /// <para>The commit operation runs asynchronously.</para>
         /// </remarks>
         public async System.Threading.Tasks.Task CommitAsync(
-            IEnumerable<BatchClientBehavior> additionalBehaviors = null, 
+            IEnumerable<BatchClientBehavior> additionalBehaviors = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             // first forbid actions during commit
@@ -56,7 +56,7 @@
                 Models.MetadataItem[] modelMetadata = UtilitiesInternal.ConvertToProtocolArray(this.Metadata);
                 Models.JobConstraints modelJobConstraints = UtilitiesInternal.CreateObjectWithNullCheck(this.Constraints, item => item.GetTransportObject());
                 Models.PoolInformation modelPoolInformation = UtilitiesInternal.CreateObjectWithNullCheck(this.PoolInformation, item => item.GetTransportObject());
-                    
+
                 asyncTask = this.parentBatchClient.ProtocolLayer.UpdateJob(
                     this.Id,
                     this.Priority,
@@ -170,9 +170,9 @@
         /// <para>
         /// Each call to this method incurs a request to the Batch service. Therefore, using this method to add
         /// multiple tasks is less efficient than using a bulk add method, and can incur HTTP connection restrictions.
-        /// If you are performing many of these operations in parallel and are seeing client side timeouts (a <see cref="TaskCanceledException"/>), please see 
+        /// If you are performing many of these operations in parallel and are seeing client side timeouts (a <see cref="TaskCanceledException"/>), please see
         /// http://msdn.microsoft.com/en-us/library/system.net.servicepointmanager.defaultconnectionlimit%28v=vs.110%29.aspx
-        /// or use 
+        /// or use
         /// <see cref="JobOperations.AddTaskAsync(string,IEnumerable{CloudTask},BatchClientParallelOptions,ConcurrentBag{ConcurrentDictionary{Type, IFileStagingArtifact}},TimeSpan?,IEnumerable{Microsoft.Azure.Batch.BatchClientBehavior})"/>.
         /// </para>
         /// <para>The add task operation runs asynchronously.</para>
@@ -205,9 +205,9 @@
         /// <para>
         /// Each call to this method incurs a request to the Batch service. Therefore, using this method to add
         /// multiple tasks is less efficient than using a bulk add method, and can incur HTTP connection restrictions.
-        /// If you are performing many of these operations in parallel and are seeing client side timeouts (a <see cref="TaskCanceledException"/>), please see 
+        /// If you are performing many of these operations in parallel and are seeing client side timeouts (a <see cref="TaskCanceledException"/>), please see
         /// http://msdn.microsoft.com/en-us/library/system.net.servicepointmanager.defaultconnectionlimit%28v=vs.110%29.aspx
-        /// or use 
+        /// or use
         /// <see cref="JobOperations.AddTask(string,IEnumerable{CloudTask},BatchClientParallelOptions,ConcurrentBag{ConcurrentDictionary{Type, IFileStagingArtifact}},TimeSpan?,IEnumerable{Microsoft.Azure.Batch.BatchClientBehavior})"/>.
         /// </para>
         /// <para>This is a blocking operation. For a non-blocking equivalent, see <see cref="AddTaskAsync(CloudTask, ConcurrentDictionary{Type, IFileStagingArtifact}, IEnumerable{BatchClientBehavior}, CancellationToken)"/>.</para>
@@ -249,7 +249,7 @@
         /// the <paramref name="parallelOptions"/>.</para>
         /// <para>Issuing a large number of simultaneous requests to the Batch service can incur HTTP connection restrictions.
         /// If you are performing many of these operations in parallel (or have specified a large MaxDegreeOfParallelism in
-        /// the parallelOptions) and are seeing client side timeouts (a <see cref="TaskCanceledException"/>), please see 
+        /// the parallelOptions) and are seeing client side timeouts (a <see cref="TaskCanceledException"/>), please see
         /// http://msdn.microsoft.com/en-us/library/system.net.servicepointmanager.defaultconnectionlimit%28v=vs.110%29.aspx .</para>
         /// <para>The progress of the operation in the face of errors is determined by <see cref="AddTaskCollectionResultHandler"/> behavior.
         /// You do not normally need to specify this behavior, as the Batch client uses a default which works in normal circumstances.
@@ -261,7 +261,7 @@
             IEnumerable<CloudTask> tasksToAdd,
             BatchClientParallelOptions parallelOptions = null,
             ConcurrentBag<ConcurrentDictionary<Type, IFileStagingArtifact>> fileStagingArtifacts = null,
-            TimeSpan? timeout = null, 
+            TimeSpan? timeout = null,
             IEnumerable<BatchClientBehavior> additionalBehaviors = null)
         {
             UtilitiesInternal.ThrowOnUnbound(this.propertyContainer.BindingState);
@@ -298,7 +298,7 @@
         /// the <paramref name="parallelOptions"/>.</para>
         /// <para>Issuing a large number of simultaneous requests to the Batch service can incur HTTP connection restrictions.
         /// If you are performing many of these operations in parallel (or have specified a large MaxDegreeOfParallelism in
-        /// the parallelOptions) and are seeing client side timeouts (a <see cref="TaskCanceledException"/>), please see 
+        /// the parallelOptions) and are seeing client side timeouts (a <see cref="TaskCanceledException"/>), please see
         /// http://msdn.microsoft.com/en-us/library/system.net.servicepointmanager.defaultconnectionlimit%28v=vs.110%29.aspx .</para>
         /// <para>The progress of the operation in the face of errors is determined by <see cref="AddTaskCollectionResultHandler"/> behavior.
         /// You do not normally need to specify this behavior, as the Batch client uses a default which works in normal circumstances.
@@ -350,7 +350,7 @@
         /// <returns>A <see cref="CloudTask"/> containing information about the specified Azure Batch task.</returns>
         /// <remarks>The get task operation runs asynchronously.</remarks>
         public async System.Threading.Tasks.Task<CloudTask> GetTaskAsync(
-            string taskId, 
+            string taskId,
             DetailLevel detailLevel = null,
             IEnumerable<BatchClientBehavior> additionalBehaviors = null,
             CancellationToken cancellationToken = default(CancellationToken))
@@ -376,8 +376,8 @@
         /// <returns>A <see cref="CloudTask"/> containing information about the specified Azure Batch task.</returns>
         /// <remarks>This is a blocking operation. For a non-blocking equivalent, see <see cref="GetTaskAsync"/>.</remarks>
         public CloudTask GetTask(
-                                string taskId, 
-                                DetailLevel detailLevel = null, 
+                                string taskId,
+                                DetailLevel detailLevel = null,
                                 IEnumerable<BatchClientBehavior> additionalBehaviors = null)
         {
             Task<CloudTask> asyncTask = GetTaskAsync(taskId, detailLevel, additionalBehaviors);
@@ -397,7 +397,7 @@
         {
             // throw if if this object is unbound
             UtilitiesInternal.ThrowOnUnbound(this.propertyContainer.BindingState);
-            
+
             // craft the behavior manager for this call
             BehaviorManager bhMgr = new BehaviorManager(this.CustomBehaviors, additionalBehaviors);
 
@@ -427,8 +427,8 @@
         /// <returns>A <see cref="System.Threading.Tasks.Task"/> that represents the asynchronous operation.</returns>
         /// <remarks>The disable operation runs asynchronously.</remarks>
         public System.Threading.Tasks.Task DisableAsync(
-            Common.DisableJobOption disableJobOption, 
-            IEnumerable<BatchClientBehavior> additionalBehaviors = null, 
+            Common.DisableJobOption disableJobOption,
+            IEnumerable<BatchClientBehavior> additionalBehaviors = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             // throw if if this object is unbound
@@ -464,8 +464,8 @@
         /// <returns>A <see cref="System.Threading.Tasks.Task"/> object that represents the asynchronous operation.</returns>
         /// <remarks>The terminate operation runs asynchronously.</remarks>
         public System.Threading.Tasks.Task TerminateAsync(
-            string terminateReason = null, 
-            IEnumerable<BatchClientBehavior> additionalBehaviors = null, 
+            string terminateReason = null,
+            IEnumerable<BatchClientBehavior> additionalBehaviors = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             // throw if if this object is unbound
@@ -540,7 +540,7 @@
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> for controlling the lifetime of the asynchronous operation.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous refresh operation.</returns>
         public async System.Threading.Tasks.Task RefreshAsync(
-            DetailLevel detailLevel = null, 
+            DetailLevel detailLevel = null,
             IEnumerable<BatchClientBehavior> additionalBehaviors = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
@@ -580,13 +580,13 @@
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> for controlling the lifetime of the asynchronous operation.</param>
         /// <remarks>The get job task counts operation runs asynchronously.</remarks>
         /// <returns>A <see cref="TaskCounts"/> object containing the task counts for the job.</returns>
-        public async Task<TaskCounts> GetTaskCountsAsync(
+        public async Task<TaskCountsResult> GetTaskCountsAsync(
             IEnumerable<BatchClientBehavior> additionalBehaviors = null,
             CancellationToken cancellationToken = default(CancellationToken))
         {
             // set up behavior manager
             BehaviorManager bhMgr = new BehaviorManager(this.CustomBehaviors, additionalBehaviors, detailLevel: null);
-            TaskCounts counts = await this.parentBatchClient.JobOperations.GetJobTaskCountsAsyncImpl(this.Id, bhMgr, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+            TaskCountsResult counts = await this.parentBatchClient.JobOperations.GetJobTaskCountsAsyncImpl(this.Id, bhMgr, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 
             return counts;
         }
@@ -597,9 +597,9 @@
         /// <param name="additionalBehaviors">A collection of <see cref="BatchClientBehavior"/> instances that are applied to the Batch service request after the <see cref="CustomBehaviors"/>.</param>
         /// <returns>A <see cref="TaskCounts"/> object containing the task counts for the job</returns>
         /// <remarks>This is a blocking operation. For a non-blocking equivalent, see <see cref="GetTaskCountsAsync"/>.</remarks>
-        public TaskCounts GetTaskCounts(IEnumerable<BatchClientBehavior> additionalBehaviors = null)
+        public TaskCountsResult GetTaskCounts(IEnumerable<BatchClientBehavior> additionalBehaviors = null)
         {
-            TaskCounts result = GetTaskCountsAsync(additionalBehaviors).WaitAndUnaggregateException(this.CustomBehaviors, additionalBehaviors);
+            TaskCountsResult result = GetTaskCountsAsync(additionalBehaviors).WaitAndUnaggregateException(this.CustomBehaviors, additionalBehaviors);
             return result;
         }
 

@@ -391,9 +391,10 @@
             return asyncTask;
         }
 
-        public Task<AzureOperationResponse<Models.TaskCounts, Models.JobGetTaskCountsHeaders>> GetJobTaskCounts(string jobId, BehaviorManager bhMgr, CancellationToken cancellationToken)
+        public Task<AzureOperationResponse<Models.TaskCountsResult, Models.JobGetTaskCountsHeaders>> GetJobTaskCounts(string jobId, BehaviorManager bhMgr, CancellationToken cancellationToken)
         {
             var request = new JobGetTaskCountsBatchRequest(this._client, cancellationToken);
+
 
             request.ServiceRequestFunc = (lambdaCancelToken) => request.RestClient.Job.GetTaskCountsWithHttpMessagesAsync(
                 jobId,
@@ -629,7 +630,7 @@
             //TODO: This branch exists in the hope that one day there will be a skiptoken for this API.
             //if (string.IsNullOrEmpty(skipToken))
             //{
-                
+
             //}
             //else
             //{
@@ -759,7 +760,7 @@
                     lambdaCancelToken);
 
             var asyncTask = ProcessAndExecuteBatchRequest(request, bhMgr);
-            
+
             return asyncTask;
         }
 
@@ -934,7 +935,7 @@
         public Task<AzureOperationHeaderResponse<Models.PoolResizeHeaders>> ResizePool(
             string poolId,
             int? targetDedicatedComputeNodes,
-            int? targetLowPriorityComputeNodes,
+            int? targetSpotComputeNodes,
             TimeSpan? resizeTimeout,
             Common.ComputeNodeDeallocationOption? deallocationOption,
             BehaviorManager bhMgr,
@@ -942,7 +943,7 @@
         {
             var parameters = new Models.PoolResizeParameter(
                 targetDedicatedComputeNodes,
-                targetLowPriorityComputeNodes,
+                targetSpotComputeNodes,
                 resizeTimeout,
                 UtilitiesInternal.MapNullableEnum<Common.ComputeNodeDeallocationOption, Protocol.Models.ComputeNodeDeallocationOption>(deallocationOption));
 
@@ -1111,11 +1112,11 @@
         }
 
         public Task<AzureOperationHeaderResponse<Models.ComputeNodeUpdateUserHeaders>> UpdateComputeNodeUser(
-            string poolId, 
-            string computeNodeId, 
-            string userName, 
-            string password, 
-            DateTime? expiryTime, 
+            string poolId,
+            string computeNodeId,
+            string userName,
+            string password,
+            DateTime? expiryTime,
             string sshPublicKey,
             BehaviorManager bhMgr,
             CancellationToken cancellationToken)
@@ -1222,7 +1223,7 @@
             var asyncTask = ProcessAndExecuteBatchRequest(request, bhMgr);
 
             return asyncTask;
-        } 
+        }
 
         public Task<AzureOperationHeaderResponse<Models.ComputeNodeRebootHeaders>> RebootComputeNode(string poolId, string computeNodeId, Common.ComputeNodeRebootOption? rebootOption, BehaviorManager bhMgr, CancellationToken cancellationToken)
         {
@@ -1671,9 +1672,9 @@
         }
 
         public Task<AzureOperationResponse<Models.TaskAddCollectionResult, Models.TaskAddCollectionHeaders>> AddTaskCollection(
-            string jobId, 
-            IEnumerable<Models.TaskAddParameter> tasks, 
-            BehaviorManager bhMgr, 
+            string jobId,
+            IEnumerable<Models.TaskAddParameter> tasks,
+            BehaviorManager bhMgr,
             CancellationToken cancellationToken)
         {
             var request = new TaskAddCollectionBatchRequest(this._client, tasks.ToList(), cancellationToken);

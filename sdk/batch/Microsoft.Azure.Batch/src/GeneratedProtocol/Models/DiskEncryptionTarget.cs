@@ -27,9 +27,7 @@ namespace Microsoft.Azure.Batch.Protocol.Models
         [EnumMember(Value = "osdisk")]
         OsDisk,
         /// <summary>
-        /// The temporary disk on the compute node is encrypted. On Linux this
-        /// encryption applies to other partitions (such as those on mounted
-        /// data disks) when encryption occurs at boot time.
+        /// The temporary disk on the compute node is encrypted.
         /// </summary>
         [EnumMember(Value = "temporarydisk")]
         TemporaryDisk

@@ -103,7 +103,7 @@ namespace BatchClientIntegrationTests
                     {
                         CloudPool newPool = batchCli.PoolOperations.CreatePool(poolId, PoolFixture.VMSize, new CloudServiceConfiguration(PoolFixture.OSFamily), targetDedicatedComputeNodes: 0);
 
-                        newPool.MaxTasksPerComputeNode = 3;
+                        newPool.TaskSlotsPerComputeNode = 3;
 
                         newPool.TaskSchedulingPolicy =
                             new TaskSchedulingPolicy(Microsoft.Azure.Batch.Common.ComputeNodeFillType.Pack);
@@ -112,7 +112,7 @@ namespace BatchClientIntegrationTests
 
                         CloudPool boundPool = batchCli.PoolOperations.GetPool(poolId);
 
-                        Assert.Equal(3, boundPool.MaxTasksPerComputeNode);
+                        Assert.Equal(3, boundPool.TaskSlotsPerComputeNode);
                         Assert.Equal(ComputeNodeFillType.Pack, boundPool.TaskSchedulingPolicy.ComputeNodeFillType);
                     }
                     finally
@@ -131,7 +131,7 @@ namespace BatchClientIntegrationTests
                             unboundJob.PoolInformation.AutoPoolSpecification = unboundAPS;
                             unboundAPS.PoolSpecification = unboundPS;
 
-                            unboundPS.MaxTasksPerComputeNode = 3;
+                            unboundPS.TaskSlotsPerComputeNode = 3;
                             unboundAPS.PoolSpecification.TargetDedicatedComputeNodes = 0; // don't use up compute nodes for this test
                             unboundPS.TaskSchedulingPolicy = new TaskSchedulingPolicy(Microsoft.Azure.Batch.Common.ComputeNodeFillType.Pack);
 
@@ -152,13 +152,13 @@ namespace BatchClientIntegrationTests
                         AutoPoolSpecification boundAPS = poolInformation.AutoPoolSpecification;
                         PoolSpecification boundPUS = boundAPS.PoolSpecification;
 
-                        Assert.Equal(3, boundPUS.MaxTasksPerComputeNode);
+                        Assert.Equal(3, boundPUS.TaskSlotsPerComputeNode);
                         Assert.Equal(ComputeNodeFillType.Pack, boundPUS.TaskSchedulingPolicy.ComputeNodeFillType);
 
                         // change the props
 
                         //TODO: Possible change this test to use a JobSchedule here?
-                        //boundPUS.MaxTasksPerComputeNode = 2;
+                        //boundPUS.TaskSlotsPerComputeNode = 2;
                         //boundPUS.TaskSchedulingPolicy = new TaskSchedulingPolicy(Microsoft.Azure.Batch.Common.ComputeNodeFillType.Spread);
 
                         //boundJob.Commit();
@@ -657,8 +657,8 @@ namespace BatchClientIntegrationTests
                 {
                     string poolId = TestUtilities.GenerateResourceId();
                     const int targetDedicated = 0;
-                    const string autoscaleFormula1 = "$TargetDedicatedNodes=0;$TargetLowPriorityNodes=0;$NodeDeallocationOption=requeue";
-                    const string autoscaleFormula2 = "$TargetDedicatedNodes=0;$TargetLowPriorityNodes=0;$NodeDeallocationOption=terminate";
+                    const string autoscaleFormula1 = "$TargetDedicatedNodes=0;$TargetSpotNodes=0;$NodeDeallocationOption=requeue";
+                    const string autoscaleFormula2 = "$TargetDedicatedNodes=0;$TargetSpotNodes=0;$NodeDeallocationOption=terminate";
 
                     const string evaluateAutoscaleFormula = "myActiveSamples=$ActiveTasks.GetSample(5);";
                     TimeSpan enableAutoScaleMinimumDelay = TimeSpan.FromSeconds(30);  // compiler says can't be const
@@ -976,7 +976,7 @@ namespace BatchClientIntegrationTests
         [InlineData(1, null)]
         [InlineData(null, 1)]
         [Trait(TestTraits.Duration.TraitName, TestTraits.Duration.Values.ShortDuration)]
-        public async Task ResizePool_AcceptedByServer(int? targetDedicated, int? targetLowPriority)
+        public async Task ResizePool_AcceptedByServer(int? targetDedicated, int? targetSpot)
         {
             Func<Task> test = async () =>
             {
@@ -998,12 +998,12 @@ namespace BatchClientIntegrationTests
 
                         await pool.ResizeAsync(
                             targetDedicatedComputeNodes: targetDedicated,
-                            targetLowPriorityComputeNodes: targetLowPriority,
+                            targetSpotComputeNodes: targetSpot,
                             resizeTimeout: TimeSpan.FromMinutes(10)).ConfigureAwait(false);
                         await pool.RefreshAsync().ConfigureAwait(false);
 
                         Assert.Equal(targetDedicated ?? 0, pool.TargetDedicatedComputeNodes);
-                        Assert.Equal(targetLowPriority ?? 0, pool.TargetLowPriorityComputeNodes);
+                        Assert.Equal(targetSpot ?? 0, pool.TargetSpotComputeNodes);
                         Assert.Equal(AllocationState.Resizing, pool.AllocationState);
                     }
                     finally
@@ -1033,11 +1033,11 @@ namespace BatchClientIntegrationTests
                     {
                         Assert.NotEmpty(poolNodeCount.PoolId);
                         Assert.NotNull(poolNodeCount.Dedicated);
-                        Assert.NotNull(poolNodeCount.LowPriority);
+                        Assert.NotNull(poolNodeCount.Spot);
 
                         // Check a few properties at random
-                        Assert.Equal(0, poolNodeCount.LowPriority.Unusable);
-                        Assert.Equal(0, poolNodeCount.LowPriority.Offline);
+                        Assert.Equal(0, poolNodeCount.Spot.Unusable);
+                        Assert.Equal(0, poolNodeCount.Spot.Offline);
                     }
 
                     var filteredNodeCounts = batchCli.PoolOperations.ListPoolNodeCounts(new ODATADetailLevel(filterClause: $"poolId eq '{poolId}'")).ToList();
@@ -1534,14 +1534,14 @@ namespace BatchClientIntegrationTests
         [Fact]
         [LiveTest]
         [Trait(TestTraits.Duration.TraitName, TestTraits.Duration.Values.LongLongDuration)]
-        public async Task LongRunning_LowPriorityComputeNodeAllocated_IsDedicatedFalse()
+        public async Task LongRunning_SpotComputeNodeAllocated_IsDedicatedFalse()
         {
             Func<Task> test = async () =>
             {
                 using (BatchClient batchCli = TestUtilities.OpenBatchClient(TestUtilities.GetCredentialsFromEnvironment()))
                 {
                     string poolId = "TestLowPri_LongRunning" + TestUtilities.GetMyName();
-                    const int targetLowPriority = 1;
+                    const int targetSpot = 1;
                     try
                     {
                         //Create a pool
@@ -1549,7 +1549,7 @@ namespace BatchClientIntegrationTests
                             poolId,
                             PoolFixture.VMSize,
                             new CloudServiceConfiguration(PoolFixture.OSFamily),
-                            targetLowPriorityComputeNodes: targetLowPriority);
+                            targetSpotComputeNodes: targetSpot);
 
                         await pool.CommitAsync().ConfigureAwait(false);
 
@@ -1562,7 +1562,7 @@ namespace BatchClientIntegrationTests
                         //Refresh pool to get latest from server
                         await pool.RefreshAsync().ConfigureAwait(false);
 
-                        Assert.Equal(targetLowPriority, pool.CurrentLowPriorityComputeNodes);
+                        Assert.Equal(targetSpot, pool.CurrentSpotComputeNodes);
 
                         IEnumerable<ComputeNode> computeNodes = pool.ListComputeNodes();
                         Assert.Single(computeNodes);

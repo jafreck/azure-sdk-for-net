@@ -215,11 +215,11 @@
         /// </summary>
         /// <param name="targetDedicatedComputeNodes">
         /// The desired number of dedicated compute nodes in the pool.
-        /// At least one of <paramref name="targetDedicatedComputeNodes"/> and <paramref name="targetLowPriorityComputeNodes"/> is required.
+        /// At least one of <paramref name="targetDedicatedComputeNodes"/> and <paramref name="targetSpotComputeNodes"/> is required.
         /// </param>
-        /// <param name="targetLowPriorityComputeNodes">
+        /// <param name="targetSpotComputeNodes">
         /// The desired number of low-priority compute nodes in the pool.
-        /// At least one of <paramref name="targetDedicatedComputeNodes"/> and <paramref name="targetLowPriorityComputeNodes"/> is required.
+        /// At least one of <paramref name="targetDedicatedComputeNodes"/> and <paramref name="targetSpotComputeNodes"/> is required.
         /// </param>
         /// <param name="resizeTimeout">The timeout for allocation of compute nodes to the pool or removal of compute nodes from the pool. If the pool has not reached the target size after this time, the resize is stopped. The default is 15 minutes.</param>
         /// <param name="deallocationOption">
@@ -240,7 +240,7 @@
         /// </remarks>
         public System.Threading.Tasks.Task ResizeAsync(
             int? targetDedicatedComputeNodes = null,
-            int? targetLowPriorityComputeNodes = null,
+            int? targetSpotComputeNodes = null,
             TimeSpan? resizeTimeout = null,
             Common.ComputeNodeDeallocationOption? deallocationOption = null,
             IEnumerable<BatchClientBehavior> additionalBehaviors = null,
@@ -255,7 +255,7 @@
             System.Threading.Tasks.Task asyncTask = this.parentBatchClient.PoolOperations.ResizePoolAsyncImpl(
                 this.Id,
                 targetDedicatedComputeNodes,
-                targetLowPriorityComputeNodes,
+                targetSpotComputeNodes,
                 resizeTimeout,
                 deallocationOption,
                 bhMgr,
@@ -270,11 +270,11 @@
         /// </summary>
         /// <param name="targetDedicatedComputeNodes">
         /// The desired number of dedicated compute nodes in the pool.
-        /// At least one of <paramref name="targetDedicatedComputeNodes"/> and <paramref name="targetLowPriorityComputeNodes"/> is required.
+        /// At least one of <paramref name="targetDedicatedComputeNodes"/> and <paramref name="targetSpotComputeNodes"/> is required.
         /// </param>
-        /// <param name="targetLowPriorityComputeNodes">
+        /// <param name="targetSpotComputeNodes">
         /// The desired number of low-priority compute nodes in the pool.
-        /// At least one of <paramref name="targetDedicatedComputeNodes"/> and <paramref name="targetLowPriorityComputeNodes"/> is required.
+        /// At least one of <paramref name="targetDedicatedComputeNodes"/> and <paramref name="targetSpotComputeNodes"/> is required.
         /// </param>
         /// <param name="resizeTimeout">The timeout for allocation of compute nodes to the pool or removal of compute nodes from the pool. If the pool has not reached the target size after this time, the resize is stopped. The default is 15 minutes.</param>
         /// <param name="deallocationOption">
@@ -293,12 +293,12 @@
         /// </remarks>
         public void Resize(
             int? targetDedicatedComputeNodes = null,
-            int? targetLowPriorityComputeNodes = null,
+            int? targetSpotComputeNodes = null,
             TimeSpan? resizeTimeout = null,
             Common.ComputeNodeDeallocationOption? deallocationOption = null,
             IEnumerable<BatchClientBehavior> additionalBehaviors = null)
         {
-            Task asyncTask = ResizeAsync(targetDedicatedComputeNodes, targetLowPriorityComputeNodes, resizeTimeout, deallocationOption, additionalBehaviors);
+            Task asyncTask = ResizeAsync(targetDedicatedComputeNodes, targetSpotComputeNodes, resizeTimeout, deallocationOption, additionalBehaviors);
             asyncTask.WaitAndUnaggregateException(this.CustomBehaviors, additionalBehaviors);
         }
 

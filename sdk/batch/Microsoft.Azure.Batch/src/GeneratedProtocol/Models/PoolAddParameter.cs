@@ -44,8 +44,8 @@ namespace Microsoft.Azure.Batch.Protocol.Models
         /// Nodes to the Pool.</param>
         /// <param name="targetDedicatedNodes">The desired number of dedicated
         /// Compute Nodes in the Pool.</param>
-        /// <param name="targetLowPriorityNodes">The desired number of
-        /// low-priority Compute Nodes in the Pool.</param>
+        /// <param name="targetSpotNodes">The desired number of Spot Compute
+        /// Nodes in the Pool.</param>
         /// <param name="enableAutoScale">Whether the Pool size should
         /// automatically adjust over time.</param>
         /// <param name="autoScaleFormula">A formula for the desired number of
@@ -66,8 +66,9 @@ namespace Microsoft.Azure.Batch.Protocol.Models
         /// <param name="applicationLicenses">The list of application licenses
         /// the Batch service will make available on each Compute Node in the
         /// Pool.</param>
-        /// <param name="maxTasksPerNode">The maximum number of Tasks that can
-        /// run concurrently on a single Compute Node in the Pool.</param>
+        /// <param name="taskSlotsPerNode">The number of task slots that can be
+        /// used to run concurrent tasks on a single compute node in the
+        /// pool.</param>
         /// <param name="taskSchedulingPolicy">How Tasks are distributed across
         /// Compute Nodes in a Pool.</param>
         /// <param name="userAccounts">The list of user Accounts to be created
@@ -76,7 +77,9 @@ namespace Microsoft.Azure.Batch.Protocol.Models
         /// the Pool as metadata.</param>
         /// <param name="mountConfiguration">Mount storage using specified file
         /// system for the entire lifetime of the pool.</param>
-        public PoolAddParameter(string id, string vmSize, string displayName = default(string), CloudServiceConfiguration cloudServiceConfiguration = default(CloudServiceConfiguration), VirtualMachineConfiguration virtualMachineConfiguration = default(VirtualMachineConfiguration), System.TimeSpan? resizeTimeout = default(System.TimeSpan?), int? targetDedicatedNodes = default(int?), int? targetLowPriorityNodes = default(int?), bool? enableAutoScale = default(bool?), string autoScaleFormula = default(string), System.TimeSpan? autoScaleEvaluationInterval = default(System.TimeSpan?), bool? enableInterNodeCommunication = default(bool?), NetworkConfiguration networkConfiguration = default(NetworkConfiguration), StartTask startTask = default(StartTask), IList<CertificateReference> certificateReferences = default(IList<CertificateReference>), IList<ApplicationPackageReference> applicationPackageReferences = default(IList<ApplicationPackageReference>), IList<string> applicationLicenses = default(IList<string>), int? maxTasksPerNode = default(int?), TaskSchedulingPolicy taskSchedulingPolicy = default(TaskSchedulingPolicy), IList<UserAccount> userAccounts = default(IList<UserAccount>), IList<MetadataItem> metadata = default(IList<MetadataItem>), IList<MountConfiguration> mountConfiguration = default(IList<MountConfiguration>))
+        /// <param name="maxSpotPrice">The maximum price you are willing to pay
+        /// per hour for a Spot VM, expressed in US dollars</param>
+        public PoolAddParameter(string id, string vmSize, string displayName = default(string), CloudServiceConfiguration cloudServiceConfiguration = default(CloudServiceConfiguration), VirtualMachineConfiguration virtualMachineConfiguration = default(VirtualMachineConfiguration), System.TimeSpan? resizeTimeout = default(System.TimeSpan?), int? targetDedicatedNodes = default(int?), int? targetSpotNodes = default(int?), bool? enableAutoScale = default(bool?), string autoScaleFormula = default(string), System.TimeSpan? autoScaleEvaluationInterval = default(System.TimeSpan?), bool? enableInterNodeCommunication = default(bool?), NetworkConfiguration networkConfiguration = default(NetworkConfiguration), StartTask startTask = default(StartTask), IList<CertificateReference> certificateReferences = default(IList<CertificateReference>), IList<ApplicationPackageReference> applicationPackageReferences = default(IList<ApplicationPackageReference>), IList<string> applicationLicenses = default(IList<string>), int? taskSlotsPerNode = default(int?), TaskSchedulingPolicy taskSchedulingPolicy = default(TaskSchedulingPolicy), IList<UserAccount> userAccounts = default(IList<UserAccount>), IList<MetadataItem> metadata = default(IList<MetadataItem>), IList<MountConfiguration> mountConfiguration = default(IList<MountConfiguration>), double? maxSpotPrice = default(double?))
         {
             Id = id;
             DisplayName = displayName;
@@ -85,7 +88,7 @@ namespace Microsoft.Azure.Batch.Protocol.Models
             VirtualMachineConfiguration = virtualMachineConfiguration;
             ResizeTimeout = resizeTimeout;
             TargetDedicatedNodes = targetDedicatedNodes;
-            TargetLowPriorityNodes = targetLowPriorityNodes;
+            TargetSpotNodes = targetSpotNodes;
             EnableAutoScale = enableAutoScale;
             AutoScaleFormula = autoScaleFormula;
             AutoScaleEvaluationInterval = autoScaleEvaluationInterval;
@@ -95,11 +98,12 @@ namespace Microsoft.Azure.Batch.Protocol.Models
             CertificateReferences = certificateReferences;
             ApplicationPackageReferences = applicationPackageReferences;
             ApplicationLicenses = applicationLicenses;
-            MaxTasksPerNode = maxTasksPerNode;
+            TaskSlotsPerNode = taskSlotsPerNode;
             TaskSchedulingPolicy = taskSchedulingPolicy;
             UserAccounts = userAccounts;
             Metadata = metadata;
             MountConfiguration = mountConfiguration;
+            MaxSpotPrice = maxSpotPrice;
             CustomInit();
         }
 
@@ -198,32 +202,31 @@ namespace Microsoft.Azure.Batch.Protocol.Models
         /// <remarks>
         /// This property must not be specified if enableAutoScale is set to
         /// true. If enableAutoScale is set to false, then you must set either
-        /// targetDedicatedNodes, targetLowPriorityNodes, or both.
+        /// targetDedicatedNodes, targetSpotNodes, or both.
         /// </remarks>
         [JsonProperty(PropertyName = "targetDedicatedNodes")]
         public int? TargetDedicatedNodes { get; set; }
 
         /// <summary>
-        /// Gets or sets the desired number of low-priority Compute Nodes in
-        /// the Pool.
+        /// Gets or sets the desired number of Spot Compute Nodes in the Pool.
         /// </summary>
         /// <remarks>
         /// This property must not be specified if enableAutoScale is set to
         /// true. If enableAutoScale is set to false, then you must set either
-        /// targetDedicatedNodes, targetLowPriorityNodes, or both.
+        /// targetDedicatedNodes, targetSpotNodes, or both.
         /// </remarks>
-        [JsonProperty(PropertyName = "targetLowPriorityNodes")]
-        public int? TargetLowPriorityNodes { get; set; }
+        [JsonProperty(PropertyName = "targetSpotNodes")]
+        public int? TargetSpotNodes { get; set; }
 
         /// <summary>
         /// Gets or sets whether the Pool size should automatically adjust over
         /// time.
         /// </summary>
         /// <remarks>
-        /// If false, at least one of targetDedicateNodes and
-        /// targetLowPriorityNodes must be specified. If true, the
-        /// autoScaleFormula property is required and the Pool automatically
-        /// resizes according to the formula. The default value is false.
+        /// If false, at least one of targetDedicatedNodes and targetSpotNodes
+        /// must be specified. If true, the autoScaleFormula property is
+        /// required and the Pool automatically resizes according to the
+        /// formula. The default value is false.
         /// </remarks>
         [JsonProperty(PropertyName = "enableAutoScale")]
         public bool? EnableAutoScale { get; set; }
@@ -333,15 +336,15 @@ namespace Microsoft.Azure.Batch.Protocol.Models
         public IList<string> ApplicationLicenses { get; set; }
 
         /// <summary>
-        /// Gets or sets the maximum number of Tasks that can run concurrently
-        /// on a single Compute Node in the Pool.
+        /// Gets or sets the number of task slots that can be used to run
+        /// concurrent tasks on a single compute node in the pool.
         /// </summary>
         /// <remarks>
         /// The default value is 1. The maximum value is the smaller of 4 times
-        /// the number of cores of the vmSize of the Pool or 256.
+        /// the number of cores of the vmSize of the pool or 256.
         /// </remarks>
-        [JsonProperty(PropertyName = "maxTasksPerNode")]
-        public int? MaxTasksPerNode { get; set; }
+        [JsonProperty(PropertyName = "taskSlotsPerNode")]
+        public int? TaskSlotsPerNode { get; set; }
 
         /// <summary>
         /// Gets or sets how Tasks are distributed across Compute Nodes in a
@@ -381,6 +384,23 @@ namespace Microsoft.Azure.Batch.Protocol.Models
         /// </remarks>
         [JsonProperty(PropertyName = "mountConfiguration")]
         public IList<MountConfiguration> MountConfiguration { get; set; }
+
+        /// <summary>
+        /// Gets or sets the maximum price you are willing to pay per hour for
+        /// a Spot VM, expressed in US dollars
+        /// </summary>
+        /// <remarks>
+        /// This price gets compared against the current Azure Spot price for
+        /// the Pool's VM size. If the Azure Spot price is higher than the
+        /// maxSpotPrice, then existing Spot VMs in the Pool will be evicted
+        /// and new Spot VMs will fail to allocate. There is a special value of
+        /// -1 which ensures that Spot VMs will never be preempted for price
+        /// reasons and that the on-demand price will always apply. Applicable
+        /// only for VirtualMachineConfiguration pools. Default value is -1 if
+        /// not provided.
+        /// </remarks>
+        [JsonProperty(PropertyName = "maxSpotPrice")]
+        public double? MaxSpotPrice { get; set; }
 
     }
 }

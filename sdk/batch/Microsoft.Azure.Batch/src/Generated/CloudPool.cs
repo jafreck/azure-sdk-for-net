@@ -36,13 +36,13 @@ namespace Microsoft.Azure.Batch
             public readonly PropertyAccessor<CloudServiceConfiguration> CloudServiceConfigurationProperty;
             public readonly PropertyAccessor<DateTime?> CreationTimeProperty;
             public readonly PropertyAccessor<int?> CurrentDedicatedComputeNodesProperty;
-            public readonly PropertyAccessor<int?> CurrentLowPriorityComputeNodesProperty;
+            public readonly PropertyAccessor<int?> CurrentSpotComputeNodesProperty;
             public readonly PropertyAccessor<string> DisplayNameProperty;
             public readonly PropertyAccessor<string> ETagProperty;
             public readonly PropertyAccessor<string> IdProperty;
             public readonly PropertyAccessor<bool?> InterComputeNodeCommunicationEnabledProperty;
             public readonly PropertyAccessor<DateTime?> LastModifiedProperty;
-            public readonly PropertyAccessor<int?> MaxTasksPerComputeNodeProperty;
+            public readonly PropertyAccessor<double?> MaxSpotPriceProperty;
             public readonly PropertyAccessor<IList<MetadataItem>> MetadataProperty;
             public readonly PropertyAccessor<IList<MountConfiguration>> MountConfigurationProperty;
             public readonly PropertyAccessor<NetworkConfiguration> NetworkConfigurationProperty;
@@ -53,8 +53,9 @@ namespace Microsoft.Azure.Batch
             public readonly PropertyAccessor<DateTime?> StateTransitionTimeProperty;
             public readonly PropertyAccessor<PoolStatistics> StatisticsProperty;
             public readonly PropertyAccessor<int?> TargetDedicatedComputeNodesProperty;
-            public readonly PropertyAccessor<int?> TargetLowPriorityComputeNodesProperty;
+            public readonly PropertyAccessor<int?> TargetSpotComputeNodesProperty;
             public readonly PropertyAccessor<TaskSchedulingPolicy> TaskSchedulingPolicyProperty;
+            public readonly PropertyAccessor<int?> TaskSlotsPerComputeNodeProperty;
             public readonly PropertyAccessor<string> UrlProperty;
             public readonly PropertyAccessor<IList<UserAccount>> UserAccountsProperty;
             public readonly PropertyAccessor<VirtualMachineConfiguration> VirtualMachineConfigurationProperty;
@@ -74,13 +75,13 @@ namespace Microsoft.Azure.Batch
                 this.CloudServiceConfigurationProperty = this.CreatePropertyAccessor<CloudServiceConfiguration>(nameof(CloudServiceConfiguration), BindingAccess.Read | BindingAccess.Write);
                 this.CreationTimeProperty = this.CreatePropertyAccessor<DateTime?>(nameof(CreationTime), BindingAccess.None);
                 this.CurrentDedicatedComputeNodesProperty = this.CreatePropertyAccessor<int?>(nameof(CurrentDedicatedComputeNodes), BindingAccess.None);
-                this.CurrentLowPriorityComputeNodesProperty = this.CreatePropertyAccessor<int?>(nameof(CurrentLowPriorityComputeNodes), BindingAccess.None);
+                this.CurrentSpotComputeNodesProperty = this.CreatePropertyAccessor<int?>(nameof(CurrentSpotComputeNodes), BindingAccess.None);
                 this.DisplayNameProperty = this.CreatePropertyAccessor<string>(nameof(DisplayName), BindingAccess.Read | BindingAccess.Write);
                 this.ETagProperty = this.CreatePropertyAccessor<string>(nameof(ETag), BindingAccess.None);
                 this.IdProperty = this.CreatePropertyAccessor<string>(nameof(Id), BindingAccess.Read | BindingAccess.Write);
                 this.InterComputeNodeCommunicationEnabledProperty = this.CreatePropertyAccessor<bool?>(nameof(InterComputeNodeCommunicationEnabled), BindingAccess.Read | BindingAccess.Write);
                 this.LastModifiedProperty = this.CreatePropertyAccessor<DateTime?>(nameof(LastModified), BindingAccess.None);
-                this.MaxTasksPerComputeNodeProperty = this.CreatePropertyAccessor<int?>(nameof(MaxTasksPerComputeNode), BindingAccess.Read | BindingAccess.Write);
+                this.MaxSpotPriceProperty = this.CreatePropertyAccessor<double?>(nameof(MaxSpotPrice), BindingAccess.Read | BindingAccess.Write);
                 this.MetadataProperty = this.CreatePropertyAccessor<IList<MetadataItem>>(nameof(Metadata), BindingAccess.Read | BindingAccess.Write);
                 this.MountConfigurationProperty = this.CreatePropertyAccessor<IList<MountConfiguration>>(nameof(MountConfiguration), BindingAccess.Read | BindingAccess.Write);
                 this.NetworkConfigurationProperty = this.CreatePropertyAccessor<NetworkConfiguration>(nameof(NetworkConfiguration), BindingAccess.Read | BindingAccess.Write);
@@ -91,8 +92,9 @@ namespace Microsoft.Azure.Batch
                 this.StateTransitionTimeProperty = this.CreatePropertyAccessor<DateTime?>(nameof(StateTransitionTime), BindingAccess.None);
                 this.StatisticsProperty = this.CreatePropertyAccessor<PoolStatistics>(nameof(Statistics), BindingAccess.None);
                 this.TargetDedicatedComputeNodesProperty = this.CreatePropertyAccessor<int?>(nameof(TargetDedicatedComputeNodes), BindingAccess.Read | BindingAccess.Write);
-                this.TargetLowPriorityComputeNodesProperty = this.CreatePropertyAccessor<int?>(nameof(TargetLowPriorityComputeNodes), BindingAccess.Read | BindingAccess.Write);
+                this.TargetSpotComputeNodesProperty = this.CreatePropertyAccessor<int?>(nameof(TargetSpotComputeNodes), BindingAccess.Read | BindingAccess.Write);
                 this.TaskSchedulingPolicyProperty = this.CreatePropertyAccessor<TaskSchedulingPolicy>(nameof(TaskSchedulingPolicy), BindingAccess.Read | BindingAccess.Write);
+                this.TaskSlotsPerComputeNodeProperty = this.CreatePropertyAccessor<int?>(nameof(TaskSlotsPerComputeNode), BindingAccess.Read | BindingAccess.Write);
                 this.UrlProperty = this.CreatePropertyAccessor<string>(nameof(Url), BindingAccess.None);
                 this.UserAccountsProperty = this.CreatePropertyAccessor<IList<UserAccount>>(nameof(UserAccounts), BindingAccess.Read | BindingAccess.Write);
                 this.VirtualMachineConfigurationProperty = this.CreatePropertyAccessor<VirtualMachineConfiguration>(nameof(VirtualMachineConfiguration), BindingAccess.Read | BindingAccess.Write);
@@ -149,9 +151,9 @@ namespace Microsoft.Azure.Batch
                     protocolObject.CurrentDedicatedNodes,
                     nameof(CurrentDedicatedComputeNodes),
                     BindingAccess.Read);
-                this.CurrentLowPriorityComputeNodesProperty = this.CreatePropertyAccessor(
-                    protocolObject.CurrentLowPriorityNodes,
-                    nameof(CurrentLowPriorityComputeNodes),
+                this.CurrentSpotComputeNodesProperty = this.CreatePropertyAccessor(
+                    protocolObject.CurrentSpotNodes,
+                    nameof(CurrentSpotComputeNodes),
                     BindingAccess.Read);
                 this.DisplayNameProperty = this.CreatePropertyAccessor(
                     protocolObject.DisplayName,
@@ -173,9 +175,9 @@ namespace Microsoft.Azure.Batch
                     protocolObject.LastModified,
                     nameof(LastModified),
                     BindingAccess.Read);
-                this.MaxTasksPerComputeNodeProperty = this.CreatePropertyAccessor(
-                    protocolObject.MaxTasksPerNode,
-                    nameof(MaxTasksPerComputeNode),
+                this.MaxSpotPriceProperty = this.CreatePropertyAccessor(
+                    protocolObject.MaxSpotPrice,
+                    nameof(MaxSpotPrice),
                     BindingAccess.Read);
                 this.MetadataProperty = this.CreatePropertyAccessor(
                     MetadataItem.ConvertFromProtocolCollection(protocolObject.Metadata),
@@ -217,13 +219,17 @@ namespace Microsoft.Azure.Batch
                     protocolObject.TargetDedicatedNodes,
                     nameof(TargetDedicatedComputeNodes),
                     BindingAccess.Read);
-                this.TargetLowPriorityComputeNodesProperty = this.CreatePropertyAccessor(
-                    protocolObject.TargetLowPriorityNodes,
-                    nameof(TargetLowPriorityComputeNodes),
+                this.TargetSpotComputeNodesProperty = this.CreatePropertyAccessor(
+                    protocolObject.TargetSpotNodes,
+                    nameof(TargetSpotComputeNodes),
                     BindingAccess.Read);
                 this.TaskSchedulingPolicyProperty = this.CreatePropertyAccessor(
                     UtilitiesInternal.CreateObjectWithNullCheck(protocolObject.TaskSchedulingPolicy, o => new TaskSchedulingPolicy(o).Freeze()),
                     nameof(TaskSchedulingPolicy),
+                    BindingAccess.Read);
+                this.TaskSlotsPerComputeNodeProperty = this.CreatePropertyAccessor(
+                    protocolObject.TaskSlotsPerNode,
+                    nameof(TaskSlotsPerComputeNode),
                     BindingAccess.Read);
                 this.UrlProperty = this.CreatePropertyAccessor(
                     protocolObject.Url,
@@ -349,8 +355,8 @@ namespace Microsoft.Azure.Batch
         /// </summary>
         /// <remarks>
         /// <para>If true, the <see cref="AutoScaleFormula"/> property is required, the pool automatically resizes according 
-        /// to the formula, and <see cref="TargetDedicatedComputeNodes"/> and <see cref="TargetLowPriorityComputeNodes"/> 
-        /// must be null.</para> <para>If false, one of the <see cref="TargetDedicatedComputeNodes"/> or <see cref="TargetLowPriorityComputeNodes"/> 
+        /// to the formula, and <see cref="TargetDedicatedComputeNodes"/> and <see cref="TargetSpotComputeNodes"/> must be 
+        /// null.</para> <para>If false, one of the <see cref="TargetDedicatedComputeNodes"/> or <see cref="TargetSpotComputeNodes"/> 
         /// properties is required.</para><para>The default value is false.</para>
         /// </remarks>
         public bool? AutoScaleEnabled
@@ -437,9 +443,9 @@ namespace Microsoft.Azure.Batch
         /// <remarks>
         /// Low-priority compute nodes which have been preempted are included in this count.
         /// </remarks>
-        public int? CurrentLowPriorityComputeNodes
+        public int? CurrentSpotComputeNodes
         {
-            get { return this.propertyContainer.CurrentLowPriorityComputeNodesProperty.Value; }
+            get { return this.propertyContainer.CurrentSpotComputeNodesProperty.Value; }
         }
 
         /// <summary>
@@ -490,16 +496,19 @@ namespace Microsoft.Azure.Batch
         }
 
         /// <summary>
-        /// Gets or sets the maximum number of tasks that can run concurrently on a single compute node in the pool.
+        /// Gets or sets the maximum price you are willing to pay per hour for a Spot VM, expressed in US dollars
         /// </summary>
         /// <remarks>
-        /// The default value is 1. The maximum value is the smaller of 4 times the number of cores of the <see cref="VirtualMachineSize"/> 
-        /// of the pool or 256.
+        /// This price gets compared against the current Azure Spot price for the Pool's VM size. If the Azure Spot price 
+        /// is higher than the maxSpotPrice, then existing Spot VMs in the Pool will be evicted and new Spot VMs will fail 
+        /// to allocate. There is a special value of -1 which ensures that Spot VMs will never be preempted for price reasons 
+        /// and that Spot VMs will always be billed at the current on-demand price. Applicable only for VirtualMachineConfiguration 
+        /// pools. Default value is -1 if not provided.
         /// </remarks>
-        public int? MaxTasksPerComputeNode
+        public double? MaxSpotPrice
         {
-            get { return this.propertyContainer.MaxTasksPerComputeNodeProperty.Value; }
-            set { this.propertyContainer.MaxTasksPerComputeNodeProperty.Value = value; }
+            get { return this.propertyContainer.MaxSpotPriceProperty.Value; }
+            set { this.propertyContainer.MaxSpotPriceProperty.Value = value; }
         }
 
         /// <summary>
@@ -601,8 +610,8 @@ namespace Microsoft.Azure.Batch
         /// </summary>
         /// <remarks>
         /// This setting cannot be specified if <see cref="AutoScaleEnabled"/> is set to true. At least one of this property 
-        /// and <see cref="TargetLowPriorityComputeNodes"/> must be specified if <see cref="AutoScaleEnabled"/> is false. 
-        /// If not specified, the default is 0.
+        /// and <see cref="TargetSpotComputeNodes"/> must be specified if <see cref="AutoScaleEnabled"/> is false. If not 
+        /// specified, the default is 0.
         /// </remarks>
         public int? TargetDedicatedComputeNodes
         {
@@ -618,10 +627,10 @@ namespace Microsoft.Azure.Batch
         /// and this property must be specified if <see cref="AutoScaleEnabled"/> is false. If not specified, the default 
         /// is 0.
         /// </remarks>
-        public int? TargetLowPriorityComputeNodes
+        public int? TargetSpotComputeNodes
         {
-            get { return this.propertyContainer.TargetLowPriorityComputeNodesProperty.Value; }
-            set { this.propertyContainer.TargetLowPriorityComputeNodesProperty.Value = value; }
+            get { return this.propertyContainer.TargetSpotComputeNodesProperty.Value; }
+            set { this.propertyContainer.TargetSpotComputeNodesProperty.Value = value; }
         }
 
         /// <summary>
@@ -631,6 +640,20 @@ namespace Microsoft.Azure.Batch
         {
             get { return this.propertyContainer.TaskSchedulingPolicyProperty.Value; }
             set { this.propertyContainer.TaskSchedulingPolicyProperty.Value = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the number of task slots that can be used to run concurrent tasks on a single compute node in the 
+        /// pool.
+        /// </summary>
+        /// <remarks>
+        /// The default value is 1. The maximum value is the smaller of 4 times the number of cores of the vmSize of the 
+        /// pool or 256.
+        /// </remarks>
+        public int? TaskSlotsPerComputeNode
+        {
+            get { return this.propertyContainer.TaskSlotsPerComputeNodeProperty.Value; }
+            set { this.propertyContainer.TaskSlotsPerComputeNodeProperty.Value = value; }
         }
 
         /// <summary>
@@ -711,15 +734,16 @@ namespace Microsoft.Azure.Batch
                 DisplayName = this.DisplayName,
                 Id = this.Id,
                 EnableInterNodeCommunication = this.InterComputeNodeCommunicationEnabled,
-                MaxTasksPerNode = this.MaxTasksPerComputeNode,
+                MaxSpotPrice = this.MaxSpotPrice,
                 Metadata = UtilitiesInternal.ConvertToProtocolCollection(this.Metadata),
                 MountConfiguration = UtilitiesInternal.ConvertToProtocolCollection(this.MountConfiguration),
                 NetworkConfiguration = UtilitiesInternal.CreateObjectWithNullCheck(this.NetworkConfiguration, (o) => o.GetTransportObject()),
                 ResizeTimeout = this.ResizeTimeout,
                 StartTask = UtilitiesInternal.CreateObjectWithNullCheck(this.StartTask, (o) => o.GetTransportObject()),
                 TargetDedicatedNodes = this.TargetDedicatedComputeNodes,
-                TargetLowPriorityNodes = this.TargetLowPriorityComputeNodes,
+                TargetSpotNodes = this.TargetSpotComputeNodes,
                 TaskSchedulingPolicy = UtilitiesInternal.CreateObjectWithNullCheck(this.TaskSchedulingPolicy, (o) => o.GetTransportObject()),
+                TaskSlotsPerNode = this.TaskSlotsPerComputeNode,
                 UserAccounts = UtilitiesInternal.ConvertToProtocolCollection(this.UserAccounts),
                 VirtualMachineConfiguration = UtilitiesInternal.CreateObjectWithNullCheck(this.VirtualMachineConfiguration, (o) => o.GetTransportObject()),
                 VmSize = this.VirtualMachineSize,

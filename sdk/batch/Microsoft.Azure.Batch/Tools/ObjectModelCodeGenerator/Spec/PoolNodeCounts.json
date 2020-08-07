@@ -29,8 +29,8 @@
     {
       "Key": {
         "Type": "NodeCounts",
-        "Name": "LowPriority",
-        "SummaryComment": "The number of low-priority nodes in each state.",
+        "Name": "Spot",
+        "SummaryComment": "The number of Spot nodes in each state.",
         "RemarksComment": null,
         "BoundAccess": "read",
         "UnboundAccess": "none"

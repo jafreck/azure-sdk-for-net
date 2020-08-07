@@ -1,0 +1,30 @@
+{
+    "Name": "TaskCountsResult",
+    "ProtocolName": "Models.TaskCountsResult",
+    "SummaryComment": "The Task and TaskSlot counts for a Job.",
+    "IsConstructorPublic": false,
+    "Properties": [
+        {
+            "Key": {
+              "Type": "TaskCounts",
+              "Name": "TaskCounts",
+              "SummaryComment": "The number of Tasks per state.",
+              "RemarksComment": null,
+              "BoundAccess": "read",
+              "UnboundAccess": "none"
+            },
+            "Value": null
+          },
+          {
+            "Key": {
+              "Type": "TaskSlotCounts",
+              "Name": "TaskSlotCounts",
+              "SummaryComment": "The number of TaskSlots required by Tasks per state.",
+              "RemarksComment": null,
+              "BoundAccess": "read",
+              "UnboundAccess": "none"
+            },
+            "Value": null
+          }
+    ]
+}

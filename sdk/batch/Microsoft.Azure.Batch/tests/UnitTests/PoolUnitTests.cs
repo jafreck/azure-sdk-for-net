@@ -55,7 +55,7 @@ namespace Azure.Batch.Unit.Tests
 
                 Assert.Equal("foobar", pools[1].DisplayName);
 
-                // enums are in the same namespace. 
+                // enums are in the same namespace.
                 Assert.Equal(AllocationState.Steady, pools[1].AllocationState);
             }
         }
@@ -106,7 +106,7 @@ namespace Azure.Batch.Unit.Tests
                                 ETag = "eTag=0x8D250D98B5D78AA",
                                 EnableAutoScale = false,
                                 LastModified = currentDateTime,
-                                MaxTasksPerNode = 4,
+                                TaskSlotsPerNode = 4,
                                 ResizeTimeout = new TimeSpan(),
                                 State = Models.PoolState.Active,
                                 StateTransitionTime = currentDateTime,
@@ -115,7 +115,7 @@ namespace Azure.Batch.Unit.Tests
                                 TaskSchedulingPolicy = new Microsoft.Azure.Batch.Protocol.Models.TaskSchedulingPolicy { NodeFillType = Models.ComputeNodeFillType.Pack }
                             }
                         };
-                        
+
                         var task = Task.FromResult(response);
                         return await task;
                     };
@@ -131,7 +131,7 @@ namespace Azure.Batch.Unit.Tests
                 Assert.Equal(3, pool.CurrentDedicatedComputeNodes);
                 Assert.Equal(false, pool.AutoScaleEnabled);
                 Assert.Equal(currentDateTime, pool.LastModified);
-                Assert.Equal(4, pool.MaxTasksPerComputeNode);
+                Assert.Equal(4, pool.TaskSlotsPerComputeNode);
                 Assert.Equal("4", pool.CloudServiceConfiguration.OSFamily);
                 Assert.Equal(PoolState.Active, pool.State);
                 Assert.Equal(currentDateTime, pool.StateTransitionTime);
@@ -147,7 +147,7 @@ namespace Azure.Batch.Unit.Tests
                 Assert.Equal("sha1", certs[0].ThumbprintAlgorithm);
             }
         }
-        
+
         [Fact]
         [Trait(TestTraits.Duration.TraitName, TestTraits.Duration.Values.VeryShortDuration)]
         public void GetPoolResizeError()

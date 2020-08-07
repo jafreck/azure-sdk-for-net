@@ -38,29 +38,29 @@ namespace Azure.Batch.Unit.Tests
             {
                 new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.CloudPool), "AutoScaleEnabled", "EnableAutoScale"),
                 new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.CloudPool), "VirtualMachineSize", "VmSize"),
-                new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.CloudPool), "MaxTasksPerComputeNode", "MaxTasksPerNode"),
+                new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.CloudPool), "MaxTasksPerComputeNode", "TaskSlotsPerComputeNode"),
                 new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.CloudPool), "Statistics", "Stats"),
                 new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.CloudPool), "InterComputeNodeCommunicationEnabled", "EnableInterNodeCommunication"),
                 new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.CloudPool), "CurrentDedicatedComputeNodes", "CurrentDedicatedNodes"),
                 new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.CloudPool), "CurrentLowPriorityComputeNodes", "CurrentLowPriorityNodes"),
                 new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.CloudPool), "TargetDedicatedComputeNodes", "TargetDedicatedNodes"),
-                new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.CloudPool), "TargetLowPriorityComputeNodes", "TargetLowPriorityNodes"),
+                new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.CloudPool), "TargetSpotComputeNodes", "TargetSpotNodes"),
 
                 new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.PoolAddParameter), "VirtualMachineSize", "VmSize"),
                 new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.PoolAddParameter), "AutoScaleEnabled", "EnableAutoScale"),
-                new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.PoolAddParameter), "MaxTasksPerComputeNode", "MaxTasksPerNode"),
+                new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.PoolAddParameter), "MaxTasksPerComputeNode", "TaskSlotsPerComputeNode"),
                 new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.PoolAddParameter), "InterComputeNodeCommunicationEnabled", "EnableInterNodeCommunication"),
                 new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.PoolAddParameter), "TargetDedicatedComputeNodes", "TargetDedicatedNodes"),
-                new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.PoolAddParameter), "TargetLowPriorityComputeNodes", "TargetLowPriorityNodes"),
+                new ComparerPropertyMapping(typeof(CloudPool), typeof(Protocol.Models.PoolAddParameter), "TargetSpotComputeNodes", "TargetSpotNodes"),
 
                 new ComparerPropertyMapping(typeof(PoolSpecification), typeof(Protocol.Models.PoolSpecification), "AutoScaleEnabled", "EnableAutoScale"),
                 new ComparerPropertyMapping(typeof(PoolSpecification), typeof(Protocol.Models.PoolSpecification), "VirtualMachineSize", "VmSize"),
-                new ComparerPropertyMapping(typeof(PoolSpecification), typeof(Protocol.Models.PoolSpecification), "MaxTasksPerComputeNode", "MaxTasksPerNode"),
+                new ComparerPropertyMapping(typeof(PoolSpecification), typeof(Protocol.Models.PoolSpecification), "MaxTasksPerComputeNode", "TaskSlotsPerComputeNode"),
                 new ComparerPropertyMapping(typeof(PoolSpecification), typeof(Protocol.Models.PoolSpecification), "InterComputeNodeCommunicationEnabled", "EnableInterNodeCommunication"),
                 new ComparerPropertyMapping(typeof(PoolSpecification), typeof(Protocol.Models.PoolSpecification), "CurrentDedicatedComputeNodes", "CurrentDedicatedNodes"),
                 new ComparerPropertyMapping(typeof(PoolSpecification), typeof(Protocol.Models.PoolSpecification), "CurrentLowPriorityComputeNodes", "CurrentLowPriorityNodes"),
                 new ComparerPropertyMapping(typeof(PoolSpecification), typeof(Protocol.Models.PoolSpecification), "TargetDedicatedComputeNodes", "TargetDedicatedNodes"),
-                new ComparerPropertyMapping(typeof(PoolSpecification), typeof(Protocol.Models.PoolSpecification), "TargetLowPriorityComputeNodes", "TargetLowPriorityNodes"),
+                new ComparerPropertyMapping(typeof(PoolSpecification), typeof(Protocol.Models.PoolSpecification), "TargetSpotComputeNodes", "TargetSpotNodes"),
 
                 new ComparerPropertyMapping(typeof(CloudServiceConfiguration), typeof(Protocol.Models.CloudServiceConfiguration), "OSFamily", "OsFamily"),
                 new ComparerPropertyMapping(typeof(CloudServiceConfiguration), typeof(Protocol.Models.CloudServiceConfiguration), "OSVersion", "OsVersion"),
@@ -218,7 +218,7 @@ namespace Azure.Batch.Unit.Tests
             // the object model (string in proxy, flags enum in OM
             ComparisonRule certificateReferenceComparisonRule = ComparisonRule.Create<CertificateVisibility?, List<Protocol.Models.CertificateVisibility>>(
                 typeof(CertificateReference),
-                typeof(Protocol.Models.CertificateReference), // This is the type that hold the target property  
+                typeof(Protocol.Models.CertificateReference), // This is the type that hold the target property
                 (visibility, proxyVisibility) =>
                 {
                     CertificateVisibility? convertedProxyVisibility = UtilitiesInternal.ParseCertificateVisibility(proxyVisibility);
@@ -233,7 +233,7 @@ namespace Azure.Batch.Unit.Tests
 
             ComparisonRule accessScopeComparisonRule = ComparisonRule.Create<AccessScope, List<Protocol.Models.AccessScope>>(
                 typeof(AuthenticationTokenSettings),
-                typeof(Protocol.Models.AuthenticationTokenSettings),  // This is the type that hold the target property  
+                typeof(Protocol.Models.AuthenticationTokenSettings),  // This is the type that hold the target property
                 (scope, proxyVisibility) =>
                 {
                     AccessScope convertedProxyAccessScope = UtilitiesInternal.ParseAccessScope(proxyVisibility);
@@ -449,7 +449,7 @@ namespace Azure.Batch.Unit.Tests
             {
                 for (int i = 0; i < TestRunCount; i++)
                 {
-                    Protocol.Models.ImageInformation imageModel = 
+                    Protocol.Models.ImageInformation imageModel =
                         this.customizedObjectFactory.GenerateNew<Protocol.Models.ImageInformation>();
 
                     ImageInformation boundImageInfo = new ImageInformation(imageModel);
@@ -687,7 +687,7 @@ namespace Azure.Batch.Unit.Tests
             this.testOutputHelper.WriteLine(e.ToString());
 
             //After GetProtocolObject, the child objects should be unreadable too
-            Assert.Throws<InvalidOperationException>(() => poolSpecification.MaxTasksPerComputeNode = 4);
+            Assert.Throws<InvalidOperationException>(() => poolSpecification.TaskSlotsPerComputeNode = 4);
 
             //The original data should be on the protocol specification
             Assert.Equal(idPrefix, protoAutoPoolSpecification.AutoPoolIdPrefix);

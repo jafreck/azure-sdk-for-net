@@ -498,8 +498,8 @@
         [Trait(TestTraits.Duration.TraitName, TestTraits.Duration.Values.MediumDuration)]
         public void TestExitConditionsAreBeingRoundTrippedCorrectly()
         {
-            Action test = () => 
-            { 
+            Action test = () =>
+            {
                 using (BatchClient client = TestUtilities.OpenBatchClient(TestUtilities.GetCredentialsFromEnvironment()))
                 {
                     //Create a job
@@ -637,7 +637,7 @@
 
                     // Use an auto pool with the job, since PoolInformation can't be updated otherwise.
                     PoolSpecification poolSpec = new PoolSpecification();
-                    
+
                     poolSpec.CloudServiceConfiguration = new CloudServiceConfiguration(PoolFixture.OSFamily, "*");
 
                     poolSpec.TargetDedicatedComputeNodes = 0;
@@ -892,12 +892,12 @@
                         CloudJob unboundJob = batchCli.JobOperations.CreateJob(jobId, poolInfo);
                         unboundJob.JobManagerTask = new JobManagerTask("foo", "cmd /c echo hi")
                         {
-                            AllowLowPriorityNode = true
+                            AllowSpotNode = true
                         };
                         await unboundJob.CommitAsync().ConfigureAwait(false);
                         await unboundJob.RefreshAsync().ConfigureAwait(false);
 
-                        Assert.True(unboundJob.JobManagerTask.AllowLowPriorityNode);
+                        Assert.True(unboundJob.JobManagerTask.AllowSpotNode);
                     }
                     finally
                     {
@@ -939,7 +939,8 @@
 
                         var counts = await unboundJob.GetTaskCountsAsync().ConfigureAwait(false);
 
-                        Assert.Equal(2, counts.Active);
+                        Assert.Equal(2, counts.TaskCounts.Active);
+                        Assert.Equal(2, counts.TaskSlotCounts.Active);
                     }
                     finally
                     {

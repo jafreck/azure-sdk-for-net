@@ -31,17 +31,17 @@ namespace Microsoft.Azure.Batch.Protocol.Models
         /// </summary>
         /// <param name="targetDedicatedNodes">The desired number of dedicated
         /// Compute Nodes in the Pool.</param>
-        /// <param name="targetLowPriorityNodes">The desired number of
-        /// low-priority Compute Nodes in the Pool.</param>
+        /// <param name="targetSpotNodes">The desired number of Spot Compute
+        /// Nodes in the Pool.</param>
         /// <param name="resizeTimeout">The timeout for allocation of Nodes to
         /// the Pool or removal of Compute Nodes from the Pool.</param>
         /// <param name="nodeDeallocationOption">Determines what to do with a
         /// Compute Node and its running task(s) if the Pool size is
         /// decreasing.</param>
-        public PoolResizeParameter(int? targetDedicatedNodes = default(int?), int? targetLowPriorityNodes = default(int?), System.TimeSpan? resizeTimeout = default(System.TimeSpan?), ComputeNodeDeallocationOption? nodeDeallocationOption = default(ComputeNodeDeallocationOption?))
+        public PoolResizeParameter(int? targetDedicatedNodes = default(int?), int? targetSpotNodes = default(int?), System.TimeSpan? resizeTimeout = default(System.TimeSpan?), ComputeNodeDeallocationOption? nodeDeallocationOption = default(ComputeNodeDeallocationOption?))
         {
             TargetDedicatedNodes = targetDedicatedNodes;
-            TargetLowPriorityNodes = targetLowPriorityNodes;
+            TargetSpotNodes = targetSpotNodes;
             ResizeTimeout = resizeTimeout;
             NodeDeallocationOption = nodeDeallocationOption;
             CustomInit();
@@ -60,11 +60,10 @@ namespace Microsoft.Azure.Batch.Protocol.Models
         public int? TargetDedicatedNodes { get; set; }
 
         /// <summary>
-        /// Gets or sets the desired number of low-priority Compute Nodes in
-        /// the Pool.
+        /// Gets or sets the desired number of Spot Compute Nodes in the Pool.
         /// </summary>
-        [JsonProperty(PropertyName = "targetLowPriorityNodes")]
-        public int? TargetLowPriorityNodes { get; set; }
+        [JsonProperty(PropertyName = "targetSpotNodes")]
+        public int? TargetSpotNodes { get; set; }
 
         /// <summary>
         /// Gets or sets the timeout for allocation of Nodes to the Pool or

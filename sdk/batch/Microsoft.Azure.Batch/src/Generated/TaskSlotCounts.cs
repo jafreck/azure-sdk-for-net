@@ -18,39 +18,53 @@ namespace Microsoft.Azure.Batch
     using System.Linq;
 
     /// <summary>
-    /// A pool in the Azure Batch service.
+    /// The TaskSlot counts for a Job.
     /// </summary>
-    public partial class PoolNodeCounts : IPropertyMetadata
+    public partial class TaskSlotCounts : IPropertyMetadata
     {
         #region Constructors
 
-        internal PoolNodeCounts(Models.PoolNodeCounts protocolObject)
+        internal TaskSlotCounts(Models.TaskSlotCounts protocolObject)
         {
-            this.Dedicated = UtilitiesInternal.CreateObjectWithNullCheck(protocolObject.Dedicated, o => new NodeCounts(o).Freeze());
-            this.PoolId = protocolObject.PoolId;
-            this.Spot = UtilitiesInternal.CreateObjectWithNullCheck(protocolObject.Spot, o => new NodeCounts(o).Freeze());
+            this.Active = protocolObject.Active;
+            this.Completed = protocolObject.Completed;
+            this.Failed = protocolObject.Failed;
+            this.Running = protocolObject.Running;
+            this.Succeeded = protocolObject.Succeeded;
         }
 
         #endregion Constructors
 
-        #region PoolNodeCounts
+        #region TaskSlotCounts
 
         /// <summary>
-        /// Gets the number of dedicated nodes in each state.
+        /// Gets the number of TaskSlots in the active state.
         /// </summary>
-        public NodeCounts Dedicated { get; }
+        public int Active { get; }
 
         /// <summary>
-        /// Gets the ID of the pool.
+        /// Gets the number of TaskSlots in the completed state.
         /// </summary>
-        public string PoolId { get; }
+        public int Completed { get; }
 
         /// <summary>
-        /// Gets the number of Spot nodes in each state.
+        /// Gets the number of TaskSlots which failed. A task fails if its result (found in the executionInfo property) is 
+        /// 'failure'.
         /// </summary>
-        public NodeCounts Spot { get; }
+        public int Failed { get; }
 
-        #endregion // PoolNodeCounts
+        /// <summary>
+        /// Gets the number of TaskSlots in the running or preparing state.
+        /// </summary>
+        public int Running { get; }
+
+        /// <summary>
+        /// Gets the number of TaskSlots which succeeded. A task succeeds if its result (found in the executionInfo property) 
+        /// is 'success'.
+        /// </summary>
+        public int Succeeded { get; }
+
+        #endregion // TaskSlotCounts
 
         #region IPropertyMetadata
 

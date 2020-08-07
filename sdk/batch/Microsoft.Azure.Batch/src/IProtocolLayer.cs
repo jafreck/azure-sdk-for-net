@@ -22,19 +22,19 @@ namespace Microsoft.Azure.Batch
         Task<AzureOperationHeaderResponse<Models.JobScheduleAddHeaders>> AddJobSchedule(Models.JobScheduleAddParameter jobScheduleId, BehaviorManager bhMgr, CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.JobScheduleUpdateHeaders>> UpdateJobSchedule(
-            string jobScheduleId, 
-            Models.JobSpecification jobSpecification, 
-            IList<Models.MetadataItem> metadata, 
-            Models.Schedule schedule, 
-            BehaviorManager bhMgr, 
+            string jobScheduleId,
+            Models.JobSpecification jobSpecification,
+            IList<Models.MetadataItem> metadata,
+            Models.Schedule schedule,
+            BehaviorManager bhMgr,
             CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.JobSchedulePatchHeaders>> PatchJobSchedule(
-            string jobScheduleId, 
-            Models.JobSpecification jobSpecification, 
-            IList<Models.MetadataItem> metadata, 
-            Models.Schedule schedule, 
-            BehaviorManager bhMgr, 
+            string jobScheduleId,
+            Models.JobSpecification jobSpecification,
+            IList<Models.MetadataItem> metadata,
+            Models.Schedule schedule,
+            BehaviorManager bhMgr,
             CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.JobScheduleEnableHeaders>> EnableJobSchedule(string jobScheduleId, BehaviorManager bhMgr, CancellationToken cancellationToken);
@@ -65,25 +65,25 @@ namespace Microsoft.Azure.Batch
 
         Task<AzureOperationResponse<Models.CloudJob, Models.JobGetHeaders>> GetJob(string jobId, BehaviorManager bhMgr, CancellationToken cancellationToken);
 
-        Task<AzureOperationResponse<Models.TaskCounts, Models.JobGetTaskCountsHeaders>> GetJobTaskCounts(string jobId, BehaviorManager bhMgr, CancellationToken cancellationToken);
+        Task<AzureOperationResponse<Models.TaskCountsResult, Models.JobGetTaskCountsHeaders>> GetJobTaskCounts(string jobId, BehaviorManager bhMgr, CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.JobPatchHeaders>> PatchJob(
-            string jobId, 
+            string jobId,
             int? priority,
             Models.OnAllTasksComplete? onAllTasksComplete,
-            Models.PoolInformation poolInfo, 
-            Models.JobConstraints constraints, 
-            IList<Models.MetadataItem> metadata, 
+            Models.PoolInformation poolInfo,
+            Models.JobConstraints constraints,
+            IList<Models.MetadataItem> metadata,
             BehaviorManager bhMgr, CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.JobUpdateHeaders>> UpdateJob(
-            string jobId, 
+            string jobId,
             int? priority,
             Models.OnAllTasksComplete? onAllTasksComplete,
-            Models.PoolInformation poolInfo, 
-            Models.JobConstraints constraints, 
-            IList<Models.MetadataItem> metadata, 
-            BehaviorManager bhMgr, 
+            Models.PoolInformation poolInfo,
+            Models.JobConstraints constraints,
+            IList<Models.MetadataItem> metadata,
+            BehaviorManager bhMgr,
             CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.JobEnableHeaders>> EnableJob(string jobId, BehaviorManager bhMgr, CancellationToken cancellationToken);
@@ -167,19 +167,19 @@ namespace Microsoft.Azure.Batch
         Task<AzureOperationHeaderResponse<Models.PoolResizeHeaders>> ResizePool(
             string poolId,
             int? targetDedicatedComputeNodes,
-            int? targetLowPriorityComputeNodes,
-            TimeSpan? resizeTimeout, 
-            Common.ComputeNodeDeallocationOption? deallocationOption, 
-            BehaviorManager bhMgr, 
+            int? targetSpotComputeNodes,
+            TimeSpan? resizeTimeout,
+            Common.ComputeNodeDeallocationOption? deallocationOption,
+            BehaviorManager bhMgr,
             CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.PoolStopResizeHeaders>> StopResizePool(string poolId, BehaviorManager bhMgr, CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.PoolEnableAutoScaleHeaders>> EnableAutoScale(
-            string poolId, 
-            string autoscaleFormula, 
-            TimeSpan? autoscaleEvaluationInterval, 
-            BehaviorManager bhMgr, 
+            string poolId,
+            string autoscaleFormula,
+            TimeSpan? autoscaleEvaluationInterval,
+            BehaviorManager bhMgr,
             CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.PoolDisableAutoScaleHeaders>> DisableAutoScale(string poolId, BehaviorManager bhMgr, CancellationToken cancellationToken);
@@ -194,28 +194,28 @@ namespace Microsoft.Azure.Batch
             CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.PoolRemoveNodesHeaders>> RemovePoolComputeNodes(
-            string poolId, 
-            IEnumerable<string> nodeIds, 
-            Common.ComputeNodeDeallocationOption? deallocationOption, 
-            TimeSpan? resizeTimeout, 
-            BehaviorManager bhMgr, 
+            string poolId,
+            IEnumerable<string> nodeIds,
+            Common.ComputeNodeDeallocationOption? deallocationOption,
+            TimeSpan? resizeTimeout,
+            BehaviorManager bhMgr,
             CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.ComputeNodeAddUserHeaders>> AddComputeNodeUser(
-            string poolId, 
-            string nodeId, 
-            Models.ComputeNodeUser protoUser, 
-            BehaviorManager bhMgr, 
+            string poolId,
+            string nodeId,
+            Models.ComputeNodeUser protoUser,
+            BehaviorManager bhMgr,
             CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.ComputeNodeUpdateUserHeaders>> UpdateComputeNodeUser(
-            string poolId, 
-            string nodeId, 
-            string userName, 
-            string password, 
-            DateTime? expiryTime, 
+            string poolId,
+            string nodeId,
+            string userName,
+            string password,
+            DateTime? expiryTime,
             string sshPublicKey,
-            BehaviorManager bhMgr, 
+            BehaviorManager bhMgr,
             CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.ComputeNodeDeleteUserHeaders>> DeleteComputeNodeUser(string poolId, string nodeId, string userName, BehaviorManager bhMgr, CancellationToken cancellationToken);
@@ -244,10 +244,10 @@ namespace Microsoft.Azure.Batch
         Task<AzureOperationHeaderResponse<Models.ComputeNodeEnableSchedulingHeaders>> EnableComputeNodeScheduling(string poolId, string computeNodeId, BehaviorManager bhMgr, CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.ComputeNodeDisableSchedulingHeaders>> DisableComputeNodeScheduling(
-            string poolId, 
+            string poolId,
             string computeNodeId,
-            Common.DisableComputeNodeSchedulingOption? disableComputeNodeSchedulingOption, 
-            BehaviorManager bhMgr, 
+            Common.DisableComputeNodeSchedulingOption? disableComputeNodeSchedulingOption,
+            BehaviorManager bhMgr,
             CancellationToken cancellationToken);
 
         Task<AzureOperationHeaderResponse<Models.TaskUpdateHeaders>> UpdateTask(string jobId, string taskId, Models.TaskConstraints constraints, BehaviorManager bhMgr, CancellationToken cancellationToken);
@@ -308,4 +308,4 @@ namespace Microsoft.Azure.Batch
 
         Task<AzureOperationResponse<IPage<Models.ApplicationSummary>, Models.ApplicationListHeaders>> ListApplicationSummaries(string skipToken, BehaviorManager bhMgr, DetailLevel detailLevel, CancellationToken cancellationToken);
     }
-} 
+}

@@ -33,7 +33,7 @@ namespace Microsoft.Azure.Batch
     {
         private class PropertyContainer : PropertyCollection
         {
-            public readonly PropertyAccessor<bool?> AllowLowPriorityNodeProperty;
+            public readonly PropertyAccessor<bool?> AllowSpotNodeProperty;
             public readonly PropertyAccessor<IList<ApplicationPackageReference>> ApplicationPackageReferencesProperty;
             public readonly PropertyAccessor<AuthenticationTokenSettings> AuthenticationTokenSettingsProperty;
             public readonly PropertyAccessor<string> CommandLineProperty;
@@ -44,13 +44,14 @@ namespace Microsoft.Azure.Batch
             public readonly PropertyAccessor<string> IdProperty;
             public readonly PropertyAccessor<bool?> KillJobOnCompletionProperty;
             public readonly PropertyAccessor<IList<OutputFile>> OutputFilesProperty;
+            public readonly PropertyAccessor<int?> RequiredSlotsProperty;
             public readonly PropertyAccessor<IList<ResourceFile>> ResourceFilesProperty;
             public readonly PropertyAccessor<bool?> RunExclusiveProperty;
             public readonly PropertyAccessor<UserIdentity> UserIdentityProperty;
 
             public PropertyContainer() : base(BindingState.Unbound)
             {
-                this.AllowLowPriorityNodeProperty = this.CreatePropertyAccessor<bool?>(nameof(AllowLowPriorityNode), BindingAccess.Read | BindingAccess.Write);
+                this.AllowSpotNodeProperty = this.CreatePropertyAccessor<bool?>(nameof(AllowSpotNode), BindingAccess.Read | BindingAccess.Write);
                 this.ApplicationPackageReferencesProperty = this.CreatePropertyAccessor<IList<ApplicationPackageReference>>(nameof(ApplicationPackageReferences), BindingAccess.Read | BindingAccess.Write);
                 this.AuthenticationTokenSettingsProperty = this.CreatePropertyAccessor<AuthenticationTokenSettings>(nameof(AuthenticationTokenSettings), BindingAccess.Read | BindingAccess.Write);
                 this.CommandLineProperty = this.CreatePropertyAccessor<string>(nameof(CommandLine), BindingAccess.Read | BindingAccess.Write);
@@ -61,6 +62,7 @@ namespace Microsoft.Azure.Batch
                 this.IdProperty = this.CreatePropertyAccessor<string>(nameof(Id), BindingAccess.Read | BindingAccess.Write);
                 this.KillJobOnCompletionProperty = this.CreatePropertyAccessor<bool?>(nameof(KillJobOnCompletion), BindingAccess.Read | BindingAccess.Write);
                 this.OutputFilesProperty = this.CreatePropertyAccessor<IList<OutputFile>>(nameof(OutputFiles), BindingAccess.Read | BindingAccess.Write);
+                this.RequiredSlotsProperty = this.CreatePropertyAccessor<int?>(nameof(RequiredSlots), BindingAccess.Read | BindingAccess.Write);
                 this.ResourceFilesProperty = this.CreatePropertyAccessor<IList<ResourceFile>>(nameof(ResourceFiles), BindingAccess.Read | BindingAccess.Write);
                 this.RunExclusiveProperty = this.CreatePropertyAccessor<bool?>(nameof(RunExclusive), BindingAccess.Read | BindingAccess.Write);
                 this.UserIdentityProperty = this.CreatePropertyAccessor<UserIdentity>(nameof(UserIdentity), BindingAccess.Read | BindingAccess.Write);
@@ -68,9 +70,9 @@ namespace Microsoft.Azure.Batch
 
             public PropertyContainer(Models.JobManagerTask protocolObject) : base(BindingState.Bound)
             {
-                this.AllowLowPriorityNodeProperty = this.CreatePropertyAccessor(
-                    protocolObject.AllowLowPriorityNode,
-                    nameof(AllowLowPriorityNode),
+                this.AllowSpotNodeProperty = this.CreatePropertyAccessor(
+                    protocolObject.AllowSpotNode,
+                    nameof(AllowSpotNode),
                     BindingAccess.Read | BindingAccess.Write);
                 this.ApplicationPackageReferencesProperty = this.CreatePropertyAccessor(
                     ApplicationPackageReference.ConvertFromProtocolCollection(protocolObject.ApplicationPackageReferences),
@@ -112,6 +114,10 @@ namespace Microsoft.Azure.Batch
                     OutputFile.ConvertFromProtocolCollection(protocolObject.OutputFiles),
                     nameof(OutputFiles),
                     BindingAccess.Read | BindingAccess.Write);
+                this.RequiredSlotsProperty = this.CreatePropertyAccessor(
+                    protocolObject.RequiredSlots,
+                    nameof(RequiredSlots),
+                    BindingAccess.Read);
                 this.ResourceFilesProperty = this.CreatePropertyAccessor(
                     ResourceFile.ConvertFromProtocolCollection(protocolObject.ResourceFiles),
                     nameof(ResourceFiles),
@@ -158,10 +164,10 @@ namespace Microsoft.Azure.Batch
         /// Gets or sets whether the Job Manager task may run on a low-priority compute node. If omitted, the default is 
         /// true.
         /// </summary>
-        public bool? AllowLowPriorityNode
+        public bool? AllowSpotNode
         {
-            get { return this.propertyContainer.AllowLowPriorityNodeProperty.Value; }
-            set { this.propertyContainer.AllowLowPriorityNodeProperty.Value = value; }
+            get { return this.propertyContainer.AllowSpotNodeProperty.Value; }
+            set { this.propertyContainer.AllowSpotNodeProperty.Value = value; }
         }
 
         /// <summary>
@@ -290,6 +296,19 @@ namespace Microsoft.Azure.Batch
         }
 
         /// <summary>
+        /// Gets or sets the number of scheduling slots that the Task required to run.
+        /// </summary>
+        /// <remarks>
+        /// The default is 1. A Task can only be scheduled to run on a compute node if the node has enough free scheduling 
+        /// slots available. For multi-instance Tasks, this must be 1.
+        /// </remarks>
+        public int? RequiredSlots
+        {
+            get { return this.propertyContainer.RequiredSlotsProperty.Value; }
+            set { this.propertyContainer.RequiredSlotsProperty.Value = value; }
+        }
+
+        /// <summary>
         /// Gets or sets a list of files that the Batch service will download to the compute node before running the command 
         /// line.
         /// </summary>
@@ -354,7 +373,7 @@ namespace Microsoft.Azure.Batch
         {
             Models.JobManagerTask result = new Models.JobManagerTask()
             {
-                AllowLowPriorityNode = this.AllowLowPriorityNode,
+                AllowSpotNode = this.AllowSpotNode,
                 ApplicationPackageReferences = UtilitiesInternal.ConvertToProtocolCollection(this.ApplicationPackageReferences),
                 AuthenticationTokenSettings = UtilitiesInternal.CreateObjectWithNullCheck(this.AuthenticationTokenSettings, (o) => o.GetTransportObject()),
                 CommandLine = this.CommandLine,
@@ -365,6 +384,7 @@ namespace Microsoft.Azure.Batch
                 Id = this.Id,
                 KillJobOnCompletion = this.KillJobOnCompletion,
                 OutputFiles = UtilitiesInternal.ConvertToProtocolCollection(this.OutputFiles),
+                RequiredSlots = this.RequiredSlots,
                 ResourceFiles = UtilitiesInternal.ConvertToProtocolCollection(this.ResourceFiles),
                 RunExclusive = this.RunExclusive,
                 UserIdentity = UtilitiesInternal.CreateObjectWithNullCheck(this.UserIdentity, (o) => o.GetTransportObject()),

@@ -47,7 +47,7 @@
             "Type": "bool?",
             "Name": "AutoScaleEnabled",
             "SummaryComment": "Whether the pool size should automatically adjust according to the <see cref=\"AutoScaleFormula\"/>.",
-            "RemarksComment": "<para>If true, the <see cref=\"AutoScaleFormula\"/> property is required, the pool automatically resizes according to the formula, and <see cref=\"TargetDedicatedComputeNodes\"/> and <see cref=\"TargetLowPriorityComputeNodes\"/> must be null.</para> <para>If false, one of the <see cref=\"TargetDedicatedComputeNodes\"/> or <see cref=\"TargetLowPriorityComputeNodes\"/> properties is required.</para><para>The default value is false.</para>",
+            "RemarksComment": "<para>If true, the <see cref=\"AutoScaleFormula\"/> property is required, the pool automatically resizes according to the formula, and <see cref=\"TargetDedicatedComputeNodes\"/> and <see cref=\"TargetSpotComputeNodes\"/> must be null.</para> <para>If false, one of the <see cref=\"TargetDedicatedComputeNodes\"/> or <see cref=\"TargetSpotComputeNodes\"/> properties is required.</para><para>The default value is false.</para>",
             "BoundAccess": "read",
             "UnboundAccess": "read,write"
           },
@@ -139,7 +139,7 @@
         {
           "Key": {
             "Type": "int?",
-            "Name": "CurrentLowPriorityComputeNodes",
+            "Name": "CurrentSpotComputeNodes",
             "SummaryComment": "The number of low-priority compute nodes currently in the pool.",
             "RemarksComment": "Low-priority compute nodes which have been preempted are included in this count.",
             "BoundAccess": "read",
@@ -147,7 +147,7 @@
           },
           "Value": {
             "Type": "int?",
-            "Name": "CurrentLowPriorityNodes"
+            "Name": "CurrentSpotNodes"
           }
         },
         {
@@ -222,15 +222,15 @@
         {
           "Key": {
             "Type": "int?",
-            "Name": "MaxTasksPerComputeNode",
-            "SummaryComment": "The maximum number of tasks that can run concurrently on a single compute node in the pool.",
-            "RemarksComment": "The default value is 1. The maximum value is the smaller of 4 times the number of cores of the <see cref=\"VirtualMachineSize\"/> of the pool or 256.",
+            "Name": "TaskSlotsPerComputeNode",
+            "SummaryComment": "The number of task slots that can be used to run concurrent tasks on a single compute node in the pool.",
+            "RemarksComment": "The default value is 1. The maximum value is the smaller of 4 times the number of cores of the vmSize of the pool or 256.",
             "BoundAccess": "read",
             "UnboundAccess": "read,write"
           },
           "Value": {
             "Type": "int?",
-            "Name": "MaxTasksPerNode"
+            "Name": "TaskSlotsPerNode"
           }
         },
         {
@@ -332,7 +332,7 @@
             "Type": "int?",
             "Name": "TargetDedicatedComputeNodes",
             "SummaryComment": "The desired number of dedicated compute nodes in the pool.",
-            "RemarksComment": "This setting cannot be specified if <see cref=\"AutoScaleEnabled\"/> is set to true. At least one of this property and <see cref=\"TargetLowPriorityComputeNodes\"/> must be specified if <see cref=\"AutoScaleEnabled\"/> is false. If not specified, the default is 0.",
+            "RemarksComment": "This setting cannot be specified if <see cref=\"AutoScaleEnabled\"/> is set to true. At least one of this property and <see cref=\"TargetSpotComputeNodes\"/> must be specified if <see cref=\"AutoScaleEnabled\"/> is false. If not specified, the default is 0.",
             "BoundAccess": "read",
             "UnboundAccess": "read,write"
           },
@@ -344,7 +344,7 @@
         {
           "Key": {
             "Type": "int?",
-            "Name": "TargetLowPriorityComputeNodes",
+            "Name": "TargetSpotComputeNodes",
             "SummaryComment": "The desired number of low-priority compute nodes in the pool.",
             "RemarksComment": "This setting cannot be specified if <see cref=\"AutoScaleEnabled\"/> is set to true. At least one of <see cref=\"TargetDedicatedComputeNodes\"/> and this property must be specified if <see cref=\"AutoScaleEnabled\"/> is false. If not specified, the default is 0.",
             "BoundAccess": "read",
@@ -352,7 +352,21 @@
           },
           "Value": {
             "Type": "int?",
-            "Name": "TargetLowPriorityNodes"
+            "Name": "TargetSpotNodes"
+          }
+        },
+        {
+          "Key": {
+            "Type": "double?",
+            "Name": "MaxSpotPrice",
+            "SummaryComment": "The maximum price you are willing to pay per hour for a Spot VM, expressed in US dollars",
+            "RemarksComment": "This price gets compared against the current Azure Spot price for the Pool's VM size. If the Azure Spot price is higher than the maxSpotPrice, then existing Spot VMs in the Pool will be evicted and new Spot VMs will fail to allocate. There is a special value of -1 which ensures that Spot VMs will never be preempted for price reasons and that Spot VMs will always be billed at the current on-demand price. Applicable only for VirtualMachineConfiguration pools. Default value is -1 if not provided.",
+            "BoundAccess": "read",
+            "UnboundAccess": "read,write"
+          },
+          "Value": {
+            "Type": "double?",
+            "Name": "MaxSpotPrice"
           }
         },
         {

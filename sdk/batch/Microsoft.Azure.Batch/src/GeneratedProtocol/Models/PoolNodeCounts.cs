@@ -32,13 +32,13 @@ namespace Microsoft.Azure.Batch.Protocol.Models
         /// <param name="poolId">The ID of the Pool.</param>
         /// <param name="dedicated">The number of dedicated Compute Nodes in
         /// each state.</param>
-        /// <param name="lowPriority">The number of low priority Compute Nodes
-        /// in each state.</param>
-        public PoolNodeCounts(string poolId, NodeCounts dedicated = default(NodeCounts), NodeCounts lowPriority = default(NodeCounts))
+        /// <param name="spot">The number of spot Compute Nodes in each
+        /// state.</param>
+        public PoolNodeCounts(string poolId, NodeCounts dedicated = default(NodeCounts), NodeCounts spot = default(NodeCounts))
         {
             PoolId = poolId;
             Dedicated = dedicated;
-            LowPriority = lowPriority;
+            Spot = spot;
             CustomInit();
         }
 
@@ -60,11 +60,10 @@ namespace Microsoft.Azure.Batch.Protocol.Models
         public NodeCounts Dedicated { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of low priority Compute Nodes in each
-        /// state.
+        /// Gets or sets the number of spot Compute Nodes in each state.
         /// </summary>
-        [JsonProperty(PropertyName = "lowPriority")]
-        public NodeCounts LowPriority { get; set; }
+        [JsonProperty(PropertyName = "spot")]
+        public NodeCounts Spot { get; set; }
 
     }
 }
